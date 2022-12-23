@@ -1,0 +1,26 @@
+{
+    "name": "technoyer/larageo",
+    "description": "Giving developers a hand to fetch the visitors geo information, user agent information, and the device information, easy to use and accepts contributor",
+    "keywords": ["laravel geolocation", "laravel ip2location", "laravel ip country", "laravel ip city", "laravel ip region", "laravel latitude", "laravel longitude", "technoyer", "laravel device detect", "laravel browser detect", "laravel user agent", "laravel ip timezone", "laravel ip currency", "laravel ip language"],
+    "homepage": "https://github.com/Technoyer/larageo",
+    "support": {
+        "issues": "https://github.com/Technoyer/larageo/issues",
+        "source": "https://github.com/Technoyer/larageo"
+    },
+    "require": {
+        "mobiledetect/mobiledetectlib": "7.x-dev"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Technoyer\\Larageo\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mohamed Gomaa",
+            "email": "senior.mgomaa@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
