@@ -21,7 +21,7 @@ class LarageoServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton('larageo', function ($app) {
-            return new Larageo();
+            return new Larageo($app->config->get('larageo', []));
         });
 
         $this->app->bind(Larageo::class, 'larageo');
@@ -40,7 +40,7 @@ class LarageoServiceProvider extends ServiceProvider
         if( false===Str::contains($app_version, 'lumen') )
         {
             $this->publishes([
-                __DIR__ . '/../config/larageo.php', $config_path . '/larageo.php'
+                __DIR__ . '/../config/larageo.php', config_path('larageo.php')
             ], 'config');
         }
     }

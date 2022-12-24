@@ -5,6 +5,8 @@
  */
 return
     [
+        'driver' => 'ip2location',
+        
         'drivers' => [
             /**
              * maptiler.com
