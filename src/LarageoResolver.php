@@ -42,11 +42,21 @@ class LarageoResolver
             $crawler_name,
             $user_agent;
 
+    /**
+     * @var \Illuminate\Support\Collection $data
+     * @var array $config //The configuration array
+     */
     public function __construct(\Illuminate\Support\Collection $data, private array $config)
     {
         $this->config = $config;
+        
+        //Assign the driver using the \Technoyer\Larageo\LarageoDriver service
         $this->driver = new LarageoDriver($this->config);
         
+        /**
+         * Reading each driver properties then matching the stubs to the global response of Larageo::class
+         * Assigning the values to the response keys
+         */
         foreach(get_class_vars(get_class($this)) as $var => $value)
         {
             if( property_exists($this->driver->service, $var) )
@@ -58,6 +68,9 @@ class LarageoResolver
             }
         }
 
+        /**
+         * Some cases like the resonse of ipinfi.io, the latitude and the longtiude both in single line seprated by comma
+         */
         if( Str::contains($this->latitude, ",") )
         {
             $exp_lat_lon = explode(",", $this->latitude);
@@ -66,7 +79,11 @@ class LarageoResolver
         }
     }
 
-    public function resolveUserAgent()
+    /**
+     * Resolving the $_SERVER['HTTP_USER_AGENT'] or request()->header('User-Agent') or simply fill it manullay
+     * @return void
+     */
+    public function resolveUserAgent(): void
     {
         if( !is_null($this->user_agent) )
         {
@@ -85,7 +102,8 @@ class LarageoResolver
                 $this->device = (is_numeric(strpos($detect, "mobile")) ? (is_numeric(strpos($detect, "tablet")) ? 'Tablet' : 'Mobile') : 'Computer');
             }
 
-            $get_browser_obj = get_browser($this->user_agent);
+            //fill the browser, browser_version and other stuff with values
+            $get_browser_obj = get_browser($this->user_agent); //return an object
             $this->platform = $get_browser_obj->platform;
             $this->browser = $get_browser_obj->browser;
             $this->browser_version = $get_browser_obj->version;
@@ -94,16 +112,29 @@ class LarageoResolver
         }
     }
 
-    public function countryAttributes()
+    /**
+     * Assignt he country values to their keys
+     * @return void
+     */
+    public function countryAttributes(): void
     {
         if( !is_null($this->country_code) && Str::length($this->country_code) > 1 )
         {
             $this->flag = sprintf('https://flagicons.lipis.dev/flags/4x3/%s.svg', Str::lower($this->country_code));
 
+            //Countries Resource
             $resource = new CountriesListResource($this->country_code);
+
+            //Locale Reseources
             $locale = new LanguagesListResource($this->country_code);
+
+            //Country Currency Resource
             $currency = new CurrenciesListResource($this->country_code);
+
+            //Timezone Resource
             $this->timezone = new TimezondeIdentifierResource($this->country_code);
+
+            //Simple OS Resource
             $os = new OSListResource($this->user_agent);
             
             if( !is_null($os) && $os instanceof OSListResource )
@@ -111,24 +142,35 @@ class LarageoResolver
                 $this->os = $os->os ?? null;
             }
 
+            //Dangerous solution, this will be according to the configuration file.
+            //This method gethostbyaddr() may takes some time to response
             if( is_null($this->isp) && isset($this->config['isp_by_php']) && $this->config['isp_by_php']===true )
             {
                 $this->isp = gethostbyaddr($this->ip);
             }
 
             $this->dial_code = $resource->dial_code;
-            $this->languages = $locale;
 
-            if( !is_null($this->timezone) && !is_null($this->timezone->timenow) )
+            if( $locale instanceof \Technoyer\Larageo\resources\LanguagesListResource )
+            {
+                if( $locale->locale instanceof \Illuminate\Support\Collection )
+                {
+                    //Langues will return into \Illuminate\Support\Collection object
+                    $this->languages = $locale->locale;
+                }
+            }
+            
+            if( !is_null($this->timezone) && !is_null($this->timezone->timenow) && is_object($this->timezone->timenow) )
             {
                 $this->timenow = $this->timezone->timenow->datetime ?? null;
             }
 
-            if( !is_null($currency) && !is_null($currency->currency) )
+            if( !is_null($currency) && $currency instanceof \Technoyer\Larageo\resources\CurrenciesListResource && !is_null($currency->currency) )
             {
                 $this->currency = $currency->currency ?? null;
             }
 
+            //just in case
             if( is_null($this->country) )
             {
                 $this->country = $resource->country_name;
