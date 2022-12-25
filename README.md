@@ -4,7 +4,7 @@
 **Larageo** is Laravel package helps developers to add value to their projects by fetching the IP geo details, like .e.g: IP, IP Version, Country, City, Region, Timezone, Locale, Currency, Time Now and more.
 
 ### Documentation
-Full Documentation live here: [Larageo Docs](https://laravel.technoyer.com/larageo).
+Full Documentation lives here: [Larageo Docs](https://laravel.technoyer.com/larageo).
 
 ### Sample Usage
 Using Facade:
