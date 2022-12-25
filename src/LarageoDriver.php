@@ -9,6 +9,9 @@ class LarageoDriver
     public $driver, $driver_api_base, $driver_api_method, $service;
     private $driver_api_key;
 
+    /**
+     * @var array $config //The configuration array
+     */
     public function __construct(private array $config)
     {
         $this->driver = $this->config['driver'];
@@ -25,11 +28,15 @@ class LarageoDriver
             
             return $this;
         } else {
-            throw new LarageoException('Driver does not exists or not supported!');
+            throw new LarageoException('Driver ('.html_entity_decode($this->driver).') does not exists or not supported!');
         }
     }
 
-    public function getApiKey()
+    /**
+     * Retrieve the private option called driver_api_key
+     * @return string
+     */
+    public function getApiKey(): string
     {
         return $this->driver_api_key;
     }
