@@ -10,8 +10,10 @@ class Larageo extends LarageoBase implements LarageoContract
 {    
     public $ip, $ip_version, $response_type;
 
-    public function __construct(private array $config)
+    public function __construct(private array $config, $http_client="cURL")
     {
+        $this->http_client = $http_client;
+
         if( !array_key_exists($this->config['driver'], $this->config['drivers']) )
         {
             throw new LarageoException('Driver does not exists or not supported!');
@@ -22,14 +24,34 @@ class Larageo extends LarageoBase implements LarageoContract
             $this->default_ip = $this->config['default_ip'];
         }
 
-        $this->driver = $this->config['driver'];
+        if( !is_null($this->http_client) )
+        {
+            $this->setHttpClient($this->http_client);
+        } else {
+            if( class_exists(\Illuminate\Support\Facades\Http::class) )
+            {
+                $this->setHttpClient('Laravel');
+            }
+        }
 
-        $this->selectDriver();
+        $this->setDriver($this->config['driver']);
+
+        $this->selectDriver($this->config);
     }
 
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
+    }
+
+    public function setDriver(string $driver)
+    {
+        $this->driver = $driver;
+    }
+
+    public function getDriver()
+    {
+        return $this->driver;
     }
 
     public function resolve(): \Technoyer\Larageo\LarageoResolver|null

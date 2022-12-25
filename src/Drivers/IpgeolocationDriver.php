@@ -3,13 +3,16 @@ namespace Technoyer\Larageo\Drivers;
 
 use Technoyer\Larageo\Drivers\LarageoDriversBase;
 
-class IpgeolocationDriver extends LarageoDriversBase
+final class IpgeolocationDriver extends LarageoDriversBase
 {
-    public function __construct()
+    private $driver_api_key;
+
+    public function __construct(private array $config)
     {
         $this->driver = "ipgeolocation";
         $this->driver_api_base = "https://api.ipgeolocation.io/ipgeo?apiKey=%key%&ip=%ip%&output=json";
-        $this->driver_api_method = config( sprintf('larageo.%s.method', $this->driver) ) ?? 'GET';
+        $this->driver_api_method = $this->config['drivers'][$this->driver]['method'] ?? 'GET';
+        $this->driver_api_key = $this->config['drivers'][$this->driver]['key'] ?? null;
 
         //Detrmine Keys of Response
         $this->country = 'country_name';
@@ -22,5 +25,10 @@ class IpgeolocationDriver extends LarageoDriversBase
         $this->timezone = 'timezone';
         $this->zipcode = 'zipcode';
         $this->isp = 'isp';
+    }
+    
+    public function getApiKey()
+    {
+        return $this->driver_api_key;
     }
 }

@@ -3,13 +3,14 @@ namespace Technoyer\Larageo\Drivers;
 
 use Technoyer\Larageo\Drivers\LarageoDriversBase;
 
-class MaptilerDriver extends LarageoDriversBase
-{
-    public function __construct()
+final class MaptilerDriver extends LarageoDriversBase
+{    
+    public function __construct(private array $config)
     {
         $this->driver = "maptiler";
         $this->driver_api_base = "https://api.maptiler.com/geolocation/ip.json?key=%key%";
-        $this->driver_api_method = config( sprintf('larageo.%s.method', $this->driver) ) ?? 'GET';
+        $this->driver_api_method = $this->config['drivers'][$this->driver]['method'] ?? 'GET';
+        $this->driver_api_key = $this->config['drivers'][$this->driver]['key'] ?? null;
 
         //Detrmine Keys of Response
         $this->country = 'country';
@@ -21,5 +22,10 @@ class MaptilerDriver extends LarageoDriversBase
         $this->languages = 'country_languages';
         $this->timezone = 'timezone';
         $this->zipcode = 'postal';
+    }
+
+    public function getApiKey()
+    {
+        return $this->driver_api_key;
     }
 }

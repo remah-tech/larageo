@@ -21,7 +21,7 @@ class LarageoServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton('larageo', function ($app) {
-            return new Larageo($app->config->get('larageo', []));
+            return new Larageo($app->config->get('larageo', []), 'cURL');
         });
 
         $this->app->bind(Larageo::class, 'larageo');

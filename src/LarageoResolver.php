@@ -45,13 +45,13 @@ class LarageoResolver
     public function __construct(\Illuminate\Support\Collection $data, private array $config)
     {
         $this->config = $config;
-        $this->driver = new LarageoDriver($this->config['driver']);
+        $this->driver = new LarageoDriver($this->config);
         
         foreach(get_class_vars(get_class($this)) as $var => $value)
         {
             if( property_exists($this->driver->service, $var) )
             {
-                if( isset($data[$this->driver->service->$var]) )
+                if( $var!=='config' && isset($data[$this->driver->service->$var]) )
                 {
                     $this->$var = $data[$this->driver->service->$var] ?? null;
                 }
@@ -96,7 +96,7 @@ class LarageoResolver
 
     public function countryAttributes()
     {
-        if( !is_null($this->country_code) )
+        if( !is_null($this->country_code) && Str::length($this->country_code) > 1 )
         {
             $this->flag = sprintf('https://flagicons.lipis.dev/flags/4x3/%s.svg', Str::lower($this->country_code));
 

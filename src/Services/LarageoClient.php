@@ -18,6 +18,14 @@ class LarageoClient extends LarageoClientBase
     public $driver_api_method;
     private $driver_api_key;
 
+    private $http_client = 'cURL';
+
+    public function setHttpClient($http_client)
+    {
+        $this->http_client = $http_client;
+        return $this;
+    }
+
     /**
      * Set the driver API key or token
      * @var string $key nullable (some drivers do not ask for token or key when you use the free edition)
@@ -33,13 +41,7 @@ class LarageoClient extends LarageoClientBase
         $this->driver_api_base = Str::replace("%key%", $this->driver_api_key, $base_url ?? $this->driver_api_base);
         $this->driver_api_base = Str::replace("%ip%", $this->ip, $this->driver_api_base);
         
-        $use = 'laravel';
-        if( !class_exists(\Illuminate\Support\Facades\Http::class) )
-        {
-            $use = 'CURL';
-        }
-
-        if( $use==='laravel' )
+        if( $this->http_client==='Laravel' )
         {
             $this->response = $this->GuzzleClient();
         } else {

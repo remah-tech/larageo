@@ -29,9 +29,9 @@ class LarageoBase extends LarageoClient
     public $cache_time = 24 * 60 * 60; //in seconds
     private $cache_key;
 
-    public function selectDriver(): void
+    public function selectDriver(array $config): void
     {
-        $driver = new LarageoDriver($this->driver);
+        $driver = new LarageoDriver($config);
         
         $this->driver_api_base = $driver->driver_api_base;
         $this->driver_api_method = $driver->driver_api_method;

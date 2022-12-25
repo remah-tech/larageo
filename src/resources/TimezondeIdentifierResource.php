@@ -15,21 +15,24 @@ class TimezondeIdentifierResource extends LarageoClientBase
 
     public function __construct(private string $country_code)
     {
-        $this->country_code = Str::upper($country_code);
-
-        $timezone = \DateTimeZone::listIdentifiers(\DateTimeZone::PER_COUNTRY, $this->country_code);
-        
-        if( is_array($timezone) && count($timezone) > 0 )
+        if( Str::length($this->country_code) > 1 )
         {
-            $this->timezone = $timezone[0];
-        }
+            $this->country_code = Str::upper($country_code);
 
-        if( $this->timezone instanceof TimezondeIdentifierResource )
-        {
-            $this->timezone = $this->timezone->timezone;
+            $timezone = \DateTimeZone::listIdentifiers(\DateTimeZone::PER_COUNTRY, $this->country_code);
+            
+            if( is_array($timezone) && count($timezone) > 0 )
+            {
+                $this->timezone = $timezone[0];
+            }
+    
+            if( $this->timezone instanceof TimezondeIdentifierResource )
+            {
+                $this->timezone = $this->timezone->timezone;
+            }
+    
+            $this->resolveTimeNow();
         }
-
-        $this->resolveTimeNow();
     }
 
     public function resolveTimeNow()

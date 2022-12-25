@@ -8,12 +8,25 @@
         "source": "https://github.com/Technoyer/larageo"
     },
     "require": {
-        "mobiledetect/mobiledetectlib": "7.x-dev"
+        "php": ">=8.0",
+        "mobiledetect/mobiledetectlib": "^3.74.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "6.x-dev",
+        "guzzlehttp/guzzle": "7.5.x-dev"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "Technoyer\\Larageo\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Technoyer\\Larageo\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -22,5 +35,15 @@
             "email": "senior.mgomaa@gmail.com"
         }
     ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Technoyer\\Larageo\\Providers\\LarageoServiceProvider"
+            ],
+            "aliases": {
+                "Larageo": "Technoyer\\Larageo\\Facades\\Larageo"
+            }
+        }
+    },
     "minimum-stability": "dev"
 }
