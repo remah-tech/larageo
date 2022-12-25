@@ -8,7 +8,7 @@ class CurrenciesListResource
 {
     public $currency = null;
 
-    public function __construct(public $country_code)
+    public function __construct(private string $country_code)
     {
         $this->country_code = Str::upper($country_code);
 
@@ -16,8 +16,6 @@ class CurrenciesListResource
         {
             $this->currency = $this->list()[$this->country_code];
         }
-
-        return $this->currency;
     }
 
     public function list(): \Illuminate\Support\Collection

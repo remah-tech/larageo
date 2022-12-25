@@ -6,9 +6,9 @@ use Illuminate\Support\Str;
 
 class CountriesListResource
 {
-    public $country_code, $dial_code, $country_name;
+    public $dial_code, $country_name;
 
-    public function __construct($country_code)
+    public function __construct(private string $country_code)
     {
         $this->country_code = Str::upper($country_code);
 

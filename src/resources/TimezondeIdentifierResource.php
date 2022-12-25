@@ -13,7 +13,7 @@ class TimezondeIdentifierResource extends LarageoClientBase
     public $timenow;
     public $response;
 
-    public function __construct(public $country_code)
+    public function __construct(private string $country_code)
     {
         $this->country_code = Str::upper($country_code);
 
@@ -30,8 +30,6 @@ class TimezondeIdentifierResource extends LarageoClientBase
         }
 
         $this->resolveTimeNow();
-
-        return $this->timezone;
     }
 
     public function resolveTimeNow()

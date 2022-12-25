@@ -8,7 +8,7 @@ class LanguagesListResource
 {
     public $locale;
 
-    public function __construct(public string $country_code)
+    public function __construct(private string $country_code)
     {
         $this->country_code = Str::lower($country_code);
 
@@ -19,8 +19,6 @@ class LanguagesListResource
         }
         
         $this->country_code = Str::upper($this->country_code);
-
-        return $this->locale;
     }
 
     protected function locales(): \Illuminate\Support\Collection
