@@ -122,6 +122,9 @@ class LarageoBase extends LarageoClient
         return true;
     }
 
+    /**
+     * Set the use agent
+     */
     public function userAgent($user_agent=null)
     {
         if( is_null($this->user_agent = $user_agent) )
@@ -135,22 +138,37 @@ class LarageoBase extends LarageoClient
         }
     }
 
+    /**
+     * Set the cache key
+     */
     public function setCacheKey($ip=null)
     {
         $this->cache_key = sprintf($this->cache_key_stub, $ip ?? $this->ip);
     }
 
-    public function getCacheKey()
+    /**
+     * retrieve the cached response
+     * @return string
+     */
+    public function getCacheKey(): string
     {
         return $this->cache_key;
     }
 
-    public function cached()
+    /**
+     * Retrieving the stored response from the cache driver
+     * @return \Illuminate\Support\Facades\Cache|\Technoyer\Larageo\LarageoResolver|null
+     */
+    public function cached(): \Illuminate\Support\Facades\Cache|\Technoyer\Larageo\LarageoResolver|null
     {
         return Cache::get($this->cache_key);
     }
 
-    public function shouldCache()
+    /**
+     * Check if cache enable in the configuration file or nor (config/larageo.php)
+     * @return boolean
+     */
+    public function shouldCache(): bool
     {
         if( isset($this->getConfig()['cache']) && true===$this->getConfig()['cache'] )
         {
@@ -160,11 +178,17 @@ class LarageoBase extends LarageoClient
         return false;
     }
 
-    public function cache()
+    /**
+     * Store the response into Laravel cache driver
+     * @return \Illuminate\Support\Facades\Cache|null
+     */
+    public function cache(): \Illuminate\Support\Facades\Cache|null
     {
         if( $this->shouldCache() && !is_null($this->response) && is_null($this->cached()) )
         {
             Cache::remember($this->cache_key, $this->cache_time, fn() => $this->response);
         }
+
+        return null;
     }
 }

@@ -20,6 +20,10 @@ class LarageoClient extends LarageoClientBase
 
     private $http_client = 'cURL';
 
+    /**
+     * Set the HTTP client, switch between Laravel & cURL based on the project dependencies
+     * @var string $http_client
+     */
     public function setHttpClient($http_client)
     {
         $this->http_client = $http_client;
@@ -36,7 +40,11 @@ class LarageoClient extends LarageoClientBase
         $this->driver_api_key = $key;
     }
 
-    public function connect()
+    /**
+     * Connection method is ready!
+     * @return \Technoyer\Larageo\LarageoResolver|null
+     */
+    public function connect(): \Technoyer\Larageo\LarageoResolver|null
     {
         $this->driver_api_base = Str::replace("%key%", $this->driver_api_key, $base_url ?? $this->driver_api_base);
         $this->driver_api_base = Str::replace("%ip%", $this->ip, $this->driver_api_base);
@@ -48,6 +56,7 @@ class LarageoClient extends LarageoClientBase
             $this->response = $this->Curl();
         }
         
+        //This method lives in \Technoyer\Larageo\Larageo::class
         return $this->resolve();
     }
 }
