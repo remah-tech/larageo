@@ -17,6 +17,11 @@ app('larageo')->get();
 ```
 ![Larageo Response Example](https://technoyer.com/img/larageo-response.jpg)
 
+### Publish Config File
+```
+php artisan vendor:publish --provider="Technoyer\Larageo\Providers\LarageoServiceProvider"
+```
+You will find new file config/larageo.php
 ### Supported Drivers
 - ip2location.io
 - apiip.net

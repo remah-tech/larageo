@@ -17,7 +17,11 @@ class LarageoServiceProvider extends ServiceProvider
     {
         if( !$this->app->runningInConsole() )
         {
-            $this->registerConfig();
+            $larageoConfigFile = __DIR__.'/../../config/larageo.php';
+
+            $this->mergeConfigFrom(
+                $larageoConfigFile, 'larageo'
+            );
         }
 
         $this->app->singleton('larageo', function ($app) {
@@ -40,7 +44,7 @@ class LarageoServiceProvider extends ServiceProvider
         if( false===Str::contains($app_version, 'lumen') )
         {
             $this->publishes([
-                __DIR__ . '/../config/larageo.php', config_path('larageo.php')
+                __DIR__.'/../../config/larageo.php' => config_path('larageo.php'),
             ], 'config');
         }
     }
@@ -52,6 +56,6 @@ class LarageoServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->registerConfig();
     }
 }
