@@ -1,6 +1,7 @@
 <?php
 namespace Technoyer\Larageo;
 
+use Illuminate\Support\Arr;
 use Technoyer\Larageo\LarageoResolver;
 use Technoyer\Larageo\Services\LarageoBase;
 use Technoyer\Larageo\Contracts\LarageoContract;
@@ -18,7 +19,7 @@ class Larageo extends LarageoBase implements LarageoContract
     {
         $this->http_client = $http_client;
 
-        if( !array_key_exists($this->config['driver'], $this->config['drivers']) )
+        if( !Arr::exists($this->config['drivers'], $this->config['driver'] ) )
         {
             throw new LarageoException('Driver ('.html_entity_decode($this->config['driver']).') does not exists or not supported!');
         }
