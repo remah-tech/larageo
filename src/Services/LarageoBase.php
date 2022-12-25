@@ -6,6 +6,7 @@ use Technoyer\Larageo\LarageoDriver;
 use Technoyer\Larageo\Drivers\MaptilerDriver;
 use Technoyer\Larageo\Services\LarageoClient;
 use Technoyer\Larageo\Exceptions\LarageoException;
+use Illuminate\Support\Facades\Cache;
 
 class LarageoBase extends LarageoClient
 {
@@ -22,8 +23,11 @@ class LarageoBase extends LarageoClient
         'HTTP_X_CLUSTER_CLIENT_IP',
     ];
 
-    private $default_ip = '127.0.0.1';
+    private $default_ip = '8.8.8.8';
     private $default_user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3';
+    public $cache_key_stub = 'ip-%s';
+    public $cache_time = 24 * 60 * 60; //in seconds
+    private $cache_key;
 
     public function selectDriver(): void
     {
@@ -128,6 +132,39 @@ class LarageoBase extends LarageoClient
         if( is_null($this->user_agent) || $this->user_agent==='Symfony' )
         {
             $this->user_agent = $this->default_user_agent;
+        }
+    }
+
+    public function setCacheKey($ip=null)
+    {
+        $this->cache_key = sprintf($this->cache_key_stub, $ip ?? $this->ip);
+    }
+
+    public function getCacheKey()
+    {
+        return $this->cache_key;
+    }
+
+    public function cached()
+    {
+        return Cache::get($this->cache_key);
+    }
+
+    public function shouldCache()
+    {
+        if( isset($this->getConfig()['cache']) && true===$this->getConfig()['cache'] )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function cache()
+    {
+        if( $this->shouldCache() && !is_null($this->response) && is_null($this->cached()) )
+        {
+            Cache::remember($this->cache_key, $this->cache_time, fn() => $this->response);
         }
     }
 }

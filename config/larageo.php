@@ -5,8 +5,27 @@
  */
 return
     [
+        /**
+         * Enable getting ISP/hostname using gethostbyaddr() may take time to response.
+         * If the driver API returned null ISP value, we may use this feature if you enable it.
+         * Its up to you!
+         */
+        'isp_by_php' => false,
+
+        /**
+         * Using the Laravel cache power for storing the API response for each IP address
+         * true = to enable this feature (recommended)
+         */
+        'cache' => true,
+
+        /**
+         * Define the default driver (IP Whois Service)
+         */
         'driver' => 'ip2location',
         
+        /**
+         * List of supported drivers and their options configuration
+         */
         'drivers' => [
             /**
              * maptiler.com
@@ -84,6 +103,12 @@ return
                 'key' => env('APIIP_KEY'),
                 'method' => 'GET'
             ]
-        ]
+        ],
+
+        /**
+         * Default IP Address
+         * We use this option for testing purpose or when something goes wrong.
+         */
+        'default_ip' => '8.8.8.8',
     ];
 ?>

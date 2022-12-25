@@ -8,6 +8,7 @@ class LarageoClient extends LarageoClientBase
 {
     public $ip;
     public $response;
+    public $response_type = 'api';
 
     /**
      * The API for drivers and its creds
@@ -19,10 +20,10 @@ class LarageoClient extends LarageoClientBase
 
     /**
      * Set the driver API key or token
-     * @var string $key
+     * @var string $key nullable (some drivers do not ask for token or key when you use the free edition)
      * @return void
      */
-    public function setApiKey(string $key): void
+    public function setApiKey(string $key=null): void
     {
         $this->driver_api_key = $key;
     }

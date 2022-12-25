@@ -3,6 +3,7 @@ namespace Technoyer\Larageo;
 
 use Illuminate\Support\Str;
 use Technoyer\Larageo\LarageoDriver;
+use Technoyer\Larageo\resources\OSListResource;
 use Technoyer\Larageo\resources\TimeNowResource;
 use Technoyer\Larageo\Exceptions\LarageoException;
 use Technoyer\Larageo\resources\CountriesListResource;
@@ -11,7 +12,7 @@ use Technoyer\Larageo\resources\CurrenciesListResource;
 use Technoyer\Larageo\resources\TimezondeIdentifierResource;
 
 class LarageoResolver
-{
+{    
     /**
      * The public properties for response
      */
@@ -103,6 +104,17 @@ class LarageoResolver
             $locale = new LanguagesListResource($this->country_code);
             $currency = new CurrenciesListResource($this->country_code);
             $this->timezone = new TimezondeIdentifierResource($this->country_code);
+            $os = new OSListResource($this->user_agent);
+            
+            if( !is_null($os) && $os instanceof OSListResource )
+            {
+                $this->os = $os->os ?? null;
+            }
+
+            if( is_null($this->isp) && isset($this->config['isp_by_php']) && $this->config['isp_by_php']===true )
+            {
+                $this->isp = gethostbyaddr($this->ip);
+            }
 
             $this->dial_code = $resource->dial_code;
             $this->languages = $locale;
